@@ -22,19 +22,19 @@ $Settings = @(
     @{
         KeyPath = "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
         ValueName = "NoAutoUpdate"
-        ValueType = DWord
+        ValueType = "DWord"
         ValueData = 1
     },
     @{
         KeyPath = "HKLM\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters"
         ValueName = "RestrictNullSessAccess"
-        ValueType = DWord
+        ValueType = "DWord"
         ValueData = 1
     },
     @{
         KeyPath = "HKLM\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile"
         ValueName = "EnableFirewall"
-        ValueType = DWord
+        ValueType = "DWord"
         ValueData = 1
     }
 )
@@ -62,14 +62,14 @@ try {
     # Validate the OU exists
     $OUCheck = Get-ADOrganizationalUnit -Filter "DistinguishedName -eq '$OU'"
     if (-not $OUCheck) {
-        throw "The specified OU '$OU' does not exist in Active Directory."
+        throw "The specified OU does not exist in Active Directory."
     }
 
     # Link the GPO to the validated OU
     New-GPLink -Name $GPOName -Target $OU -Enforced $true
     Write-Host "GPO '$GPOName' linked to $OU successfully."
 } catch {
-    Write-Warning "Failed to link GPO to $OU: $($_.Exception.Message)"
+    Write-Warning "Failed to link GPO"
 }
 
 Write-Host "Group Policy configuration complete."
