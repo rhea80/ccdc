@@ -1,4 +1,3 @@
-# Import the Group Policy module
 Import-Module GroupPolicy
 
 # Define domain and GPO details
@@ -6,10 +5,9 @@ $DomainName = (Get-ADDomain).DNSRoot
 $GPOName = "Custom Group Policy Settings"
 $GPODescription = "This GPO is configured by PowerShell to enforce organization-wide security settings."
 
-# Check if the GPO already exists
+# Check if the GPO  exists
 $ExistingGPO = Get-GPO -Name $GPOName -ErrorAction SilentlyContinue
 if (-not $ExistingGPO) {
-    # Create a new GPO
     $GPO = New-GPO -Name $GPOName -Domain $DomainName -Comment $GPODescription
     Write-Host "New GPO '$GPOName' created successfully."
 } else {
@@ -17,7 +15,7 @@ if (-not $ExistingGPO) {
     Write-Host "Using existing GPO '$GPOName'."
 }
 
-# Define a list of settings to configure
+# Settings to configure
 $Settings = @(
     @{
         KeyPath = "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
@@ -39,7 +37,7 @@ $Settings = @(
     }
 )
 
-# Apply each setting to the GPO
+
 foreach ($Setting in $Settings) {
     try {
         # Ensure all required keys exist in $Setting
@@ -54,18 +52,15 @@ foreach ($Setting in $Settings) {
     }
 }
 
-# Define the Organizational Unit (OU)
 $OU = "OU=Domain Controllers,DC=RUSEC,DC=org" # CHANGE FOR OU PATH 
 
-# Link the GPO to the domain (or specific OU if needed)
+
 try {
-    # Validate the OU exists
     $OUCheck = Get-ADOrganizationalUnit -Filter "DistinguishedName -eq '$OU'"
     if (-not $OUCheck) {
         throw "The specified OU does not exist in Active Directory."
     }
 
-    # Link the GPO to the validated OU
     New-GPLink -Name $GPOName -Target $OU -Enforced $true
     Write-Host "GPO '$GPOName' linked to $OU successfully."
 } catch {
