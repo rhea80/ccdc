@@ -55,7 +55,7 @@ foreach ($Setting in $Settings) {
 }
 
 # Define the Organizational Unit (OU)
-$OU = "OU=Workstations,DC=RUSEC,DC=org" # Replace with your actual OU path
+$OU = "OU=Domain Controllers,DC=RUSEC,DC=org" # CHANGE FOR OU PATH 
 
 # Link the GPO to the domain (or specific OU if needed)
 try {
